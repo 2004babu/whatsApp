@@ -1,0 +1,53 @@
+header{
+  height: 60px;
+}
+
+.chat-profile{
+  height:100px !important;
+  width: 100px !important;
+}
+.chat-profile  img{
+  object-fit:contain;
+  height:63px !important;
+  width: 63px !important;
+  border-radius: 50% !important; 
+}
+
+.chat-height{
+height: 100px;
+width: 100%;
+}
+
+footer{
+  height: 90px;
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  font-size: medium;
+
+}
+
+.footer-text{
+  height: 30px;
+  width: 60px;
+  
+  border-radius: 9px;
+}
+
+.single-message{
+  width: 70%;
+  background-color: green;
+}
+
+.online::before{
+  position: absolute;
+  display: block;
+  content: '';
+  height: 15px;
+  width: 15px;
+  background-color: rgb(3, 171, 3);
+  border-radius: 50%;
+  z-index: 10;
+  transform: translate(45px,4px);
+  
+  }
