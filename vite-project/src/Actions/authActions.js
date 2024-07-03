@@ -18,7 +18,7 @@ export const register = (userData) => async (dispatch) => {
     };
     dispatch(getSingleUserRequest());
     const { data } = await axios.post(
-      "http://localhost:8000/api/auth/signup",
+      "http://13.210.245.134:4001/api/auth/signup",
       userData,
       config
     );
@@ -44,7 +44,7 @@ export const login = (userData) => async (dispatch) => {
     dispatch(getSingleUserRequest());
 
     const { data } = await axios.post(
-      "http://localhost:8000/api/auth/login",
+      "http://13.210.245.134:4001/api/auth/login",
       userData,
       config
     );
@@ -67,7 +67,7 @@ export const loadUser = async (dispatch) => {
     };
 
     dispatch(getSingleUserRequest());
-    const { data } = await axios.get("http://localhost:8000/api/auth/loaduser",config);
+    const { data } = await axios.get("http://13.210.245.134:4001/api/auth/loaduser",config);
     console.log(data);
     dispatch(getSingleUserSuccess(data));
   } catch (error) {
@@ -86,7 +86,7 @@ export const getUsers = async (dispatch) => {
       };
   
     dispatch(getAllusersRequest());
-    const { data } = await axios.get("http://localhost:8000/api/users/",config);
+    const { data } = await axios.get("http://13.210.245.134:4001/api/users/",config);
     // console.log(data);
     dispatch(getAllusersSuccess(data));
   } catch (error) {
@@ -97,7 +97,7 @@ export const getUsers = async (dispatch) => {
 // export const getSIngleUser=async(dispatch)=>{
 //     try {
 //         dispatch(getSingleUserRequest())
-//         const {data}=await axios.get('http://localhost:8000/api/user/')
+//         const {data}=await axios.get('http://13.210.245.134:4001/api/user/')
 //         console.log(data);
 //         dispatch(getSingleUserSuccess(data))
 //     } catch (error) {

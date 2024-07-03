@@ -11,7 +11,7 @@ export const sendSingleMessage=(message,id)=>async(dispatch)=>{
         }
 
         dispatch(sendMessageRequest())
-        const {data}=await axios.post(`http://localhost:8000/api/message/send/${id}`,{message},config)
+        const {data}=await axios.post(`http://13.210.245.134:4001/api/message/send/${id}`,{message},config)
         console.log(data);
         dispatch(sendMessageSuccess(data))
     } catch (error) {
@@ -29,7 +29,7 @@ export const GetAllCoversationMessage=(id)=>async(dispatch)=>{
         }
 
         dispatch(sendMessageRequest())
-        const {data}=await axios.post(`http://localhost:8000/api/message/${id}`,{},config)
+        const {data}=await axios.post(`http://13.210.245.134:4001/api/message/${id}`,{},config)
         
         dispatch(sendMessageSuccess(data))
         console.log(data);
