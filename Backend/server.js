@@ -43,9 +43,9 @@ app.use("/api/users/", userRouter);
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use(express.static(path.join(__dirname, "../vite-project/dist")));
 
-app.get(['/', "*"], (req, res) => {
-  res.sendFile(path.join(__dirname, "../vite-project/dist/index.html"));
-});
+// app.get(['/', "*"], (req, res) => {
+//   res.sendFile(path.join(__dirname, "../vite-project/dist/index.html"));
+// });
 
 app.use(error);
 
