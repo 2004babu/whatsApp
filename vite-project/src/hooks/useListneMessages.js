@@ -1,19 +1,19 @@
-// import React from 'react'
+// // import React from 'react'
 
-import { useEffect } from "react"
-import { useSocketContext } from "../Context/SocketPrivider"
+// import { useEffect } from "react"
+// import { useSocketContext } from "../Context/SocketPrivider"
 
-const useListneMessages = () => {
+// const useListneMessages = () => {
   
-const {socket}=useSocketContext()
+// const {socket}=useSocketContext()
 
-useEffect(()=>{
+// useEffect(()=>{
 
-socket?.on('hi',(mess)=>{
-    console.log(mess);
-})
-return ()=>socket?.off('newMessage')
-},[socket])
-}
+// socket?.on('hi',(mess)=>{
+//     console.log(mess);
+// })
+// return ()=>socket?.off('newMessage')
+// },[socket])
+// }
 
-export default useListneMessages
+// export default useListneMessages

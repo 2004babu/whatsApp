@@ -41,7 +41,7 @@ export const SocketPrivider = ({ children }) => {
         socket.close();
         SetSocket(null);
       }
-      setOnlineUser([]);
+      // setOnlineUser([]);
     }
   }, [user,messages]); // Ensure user?._id is included in dependency array
   // console.log('messages',messages);

@@ -11,7 +11,7 @@ const { setSocket } = require("./Socket/socket.js");
 const app = express();
 
 const server = http.createServer(app);
-setSocket(server)
+setSocket(server);
 
 const dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, "./config.env") });
@@ -34,19 +34,21 @@ app.use(cors(corsOptions));
 
 const error = require("./middleware/error.js");
 
-app.use('/uploads',express.static(path.join(__dirname,'./uploads')))
+// API routes
 app.use("/api/auth/", authRouter);
 app.use("/api/message/", messageRouter);
 app.use("/api/users/", userRouter);
 
-app.use(error);
+// Static files and frontend
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
+app.use(express.static(path.join(__dirname, "../vite-project/dist")));
 
-app.use(express.static(path.join(__dirname,'../vite-project/dist')))
-app.use('*',(req,res)=>{
-  res.sendFile(path.join(__dirname,'../vite-project/dist/index.html'))
-})
+app.get(['/', "*"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../vite-project/dist/index.html"));
+});
+
+app.use(error);
 
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
-

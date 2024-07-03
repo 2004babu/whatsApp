@@ -68,7 +68,7 @@ export const loadUser = async (dispatch) => {
 
     dispatch(getSingleUserRequest());
     const { data } = await axios.get("http://localhost:8000/api/auth/loaduser",config);
-    // console.log(data);
+    console.log(data);
     dispatch(getSingleUserSuccess(data));
   } catch (error) {
     console.log("register ", error?.response?.data?.message);

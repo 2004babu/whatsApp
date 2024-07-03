@@ -11,8 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./Actions/authActions";
 import Chat from "./components/pages/Chat";
 import Status from "./components/pages/Status";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ProductedRoute from "../ProductedRoute";
+import { SocketPrivider } from "./Context/SocketPrivider";
+import { HelmetProvider } from "react-helmet-async";
 
 function App() {
   const dispacth = useDispatch();
@@ -28,37 +31,43 @@ function App() {
       dispacth(loadUser);
     }
   }, [isAuthenticatedUser, dispacth]);
-
   return (
     <Fragment>
-        <ToastContainer/>
-      <Routes>
-          <Route
-            path="/"
-            element={isAuthenticatedUser ? <AllChat /> : <Login />}
-          />
-          <Route
-            path="/login"
-            element={ <Login />}
-          />
-          <Route
-            path="/profile"
-            element={isAuthenticatedUser ? <Profile /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={!isAuthenticatedUser ? <Register /> : <AllChat />}
-          />
-          <Route
-            path="/chat/:id"
-            element={isAuthenticatedUser ? <Chat /> : <Login />}
-          />
-          <Route
-            path="/upload/status"
-            element={isAuthenticatedUser ? <Status /> : <Login />}
-          />
-      </Routes>
-       
+      {/* <ToastContainer />
+      <BrowserRouter>
+        <SocketPrivider>
+          <HelmetProvider>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProductedRoute>
+                    <AllChat />
+                  </ProductedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/profile"
+                element={
+                  <ProductedRoute>
+                    <Profile />
+                  </ProductedRoute>
+                }
+              />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/chat/:id"
+                element={isAuthenticatedUser ? <Chat /> : <Login />}
+              />
+              <Route
+                path="/upload/status"
+                element={isAuthenticatedUser ? <Status /> : <Login />}
+              />
+            </Routes>
+          </HelmetProvider>
+        </SocketPrivider>
+      </BrowserRouter> */}
     </Fragment>
   );
 }
