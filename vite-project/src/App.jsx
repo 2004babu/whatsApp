@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProductedRoute from "../ProductedRoute";
 import { SocketPrivider } from "./Context/SocketPrivider";
 import { HelmetProvider } from "react-helmet-async";
+import UploadStatus from "./components/StatusPages/UploadStatus";
 
 function App() {
   const dispacth = useDispatch();
@@ -33,7 +34,7 @@ function App() {
   }, [isAuthenticatedUser, dispacth]);
   return (
     <Fragment>
-      {/* <ToastContainer />
+      <ToastContainer />
       <BrowserRouter>
         <SocketPrivider>
           <HelmetProvider>
@@ -62,12 +63,13 @@ function App() {
               />
               <Route
                 path="/upload/status"
-                element={isAuthenticatedUser ? <Status /> : <Login />}
+                element={isAuthenticatedUser ? <UploadStatus /> : <Login />}
               />
+
             </Routes>
           </HelmetProvider>
         </SocketPrivider>
-      </BrowserRouter> */}
+      </BrowserRouter>
     </Fragment>
   );
 }

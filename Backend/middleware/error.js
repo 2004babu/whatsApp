@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 
 module.exports=async(err,req,res,next)=>{
     // console.log('from error Handler  '+err.code);
-    // console.log('from error Handler');
+    console.log('from error Handler',err);
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     
     if (err.code) {

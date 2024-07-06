@@ -6,8 +6,10 @@ const authSlice = createSlice({
     loading: false,
     user: {},
     users: {},
+    userList: [],
     isAuthenticatedUser: false,
     error: null,
+    isStatusUploaded: null,
   },
   reducers: {
     getAllusersRequest(state, action) {
@@ -22,8 +24,6 @@ const authSlice = createSlice({
         loading: false,
         users: action.payload.users,
         isAuthenticatedUser: true,
-        
-        
       };
     },
     getAllusersFail(state, action) {
@@ -54,6 +54,34 @@ const authSlice = createSlice({
         error: action.payload,
       };
     },
+    setStatusRequest(state, action) {
+      return {
+        ...state,
+        loading: true,
+      };
+    },
+    setStatusSuccess(state, action) {
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+        isStatusUploaded: true,
+      };
+    },
+    setStatusFail(state, action) {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    },
+    clearStatusUploaded(state, action) {
+      return {
+        ...state,
+        loading: false,
+        isStatusUploaded: null,
+      };
+    },
     clearError(state, action) {
       return {
         ...state,
@@ -74,6 +102,13 @@ export const {
   getSingleUserRequest,
   getSingleUserSuccess,
   clearError,
+  getUserListFail,
+  getUserListRequest,
+  getUserListSuccess,
+  setStatusFail,
+  setStatusRequest,
+  setStatusSuccess,
+  clearStatusUploaded,
 } = actions;
 
 export default reducer;

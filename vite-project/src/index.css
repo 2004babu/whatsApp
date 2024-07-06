@@ -19,12 +19,13 @@ width: 100%;
 }
 
 footer{
-  height: 90px;
+  height: 55px;
   background-color: black;
   color: white;
   font-weight: 600;
   font-size: medium;
-
+position: fixed;
+bottom: 0px;
 }
 
 .footer-text{

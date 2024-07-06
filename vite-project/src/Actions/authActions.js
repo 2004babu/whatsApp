@@ -5,6 +5,12 @@ import {
   getSingleUserRequest,
   getSingleUserSuccess,
   getSingleUerFail,
+  getUserListRequest,
+  getUserListSuccess,
+  getUserListFail,
+  setStatusRequest,
+  setStatusSuccess,
+  setStatusFail,
 } from "../Slices/authSlice";
 import axios from "axios";
 
@@ -18,7 +24,7 @@ export const register = (userData) => async (dispatch) => {
     };
     dispatch(getSingleUserRequest());
     const { data } = await axios.post(
-      "http://13.210.245.134:4001/api/auth/signup",
+      `/api/auth/signup`,
       userData,
       config
     );
@@ -44,7 +50,7 @@ export const login = (userData) => async (dispatch) => {
     dispatch(getSingleUserRequest());
 
     const { data } = await axios.post(
-      "http://13.210.245.134:4001/api/auth/login",
+      `/api/auth/login`,
       userData,
       config
     );
@@ -67,7 +73,7 @@ export const loadUser = async (dispatch) => {
     };
 
     dispatch(getSingleUserRequest());
-    const { data } = await axios.get("http://13.210.245.134:4001/api/auth/loaduser",config);
+    const { data } = await axios.get(`/api/auth/loaduser`,config);
     console.log(data);
     dispatch(getSingleUserSuccess(data));
   } catch (error) {
@@ -86,7 +92,7 @@ export const getUsers = async (dispatch) => {
       };
   
     dispatch(getAllusersRequest());
-    const { data } = await axios.get("http://13.210.245.134:4001/api/users/",config);
+    const { data } = await axios.get("/api/users/",config);
     // console.log(data);
     dispatch(getAllusersSuccess(data));
   } catch (error) {
@@ -94,14 +100,44 @@ export const getUsers = async (dispatch) => {
     dispatch(getAllusersFail(error?.response?.data?.message));
   }
 };
-// export const getSIngleUser=async(dispatch)=>{
+// export const getUserList=async(dispatch)=>{
 //     try {
-//         dispatch(getSingleUserRequest())
-//         const {data}=await axios.get('http://13.210.245.134:4001/api/user/')
+//         dispatch(getUserListRequest())
+//         const {data}=await axios.get('/api/auth/Receiverlist')
 //         console.log(data);
-//         dispatch(getSingleUserSuccess(data))
+//         dispatch(getUserListSuccess(data.lineUpList))
 //     } catch (error) {
 //         console.log('get users actions ',error?.response?.data?.message);
-//         dispatch(getSingleUerFail(error?.response?.data?.message))
+//         dispatch(getUserListFail(error?.response?.data?.message))
 //     }
 // }
+
+
+
+
+export const setStatus = (userData) => async (dispatch) => {
+  try {
+    // console.log(userData);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true, 
+    };
+
+    dispatch(setStatusRequest());
+
+    const { data } = await axios.post(
+      `/api/auth/status`,
+      userData,
+      config
+    );
+
+    console.log(data);
+    dispatch(setStatusSuccess(data));
+  } catch (error) {
+    console.log("setStatus  ", error?.response?.data?.message);
+    dispatch(setStatusFail(error?.response?.data?.message));
+  }
+};

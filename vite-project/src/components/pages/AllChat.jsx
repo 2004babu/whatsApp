@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ListProfile from "./ListProfile";
 import Header from "../layouts/Header";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,30 +8,28 @@ import { clearError } from "../../Slices/authSlice";
 
 import Footer from "../layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom";
-
-
+import { useSocketContext } from "../../Context/SocketPrivider";
 
 const AllChat = () => {
-  // const {socket,onlineUsers}=useSocketContext()
+  const { socket = {}, onlineUsers, lineUpUsers = [] } = useSocketContext();
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const [filterdusers, setFilterdusers] = useState([]);
   const {
-    user={},
+    user = {},
     users = [],
     loading = false,
     isAuthenticatedUser = false,
     error = null,
   } = useSelector((state) => state.authState);
-  
 
-  const handleAllChatClick =(e,id)=>{
-    if(e.target.tagName==='IMG'||e.target.tagName==='FIGURE'){
-    }else{
-
+  const handleAllChatClick = (e, id) => {
+    if (e.target.tagName === "IMG" || e.target.tagName === "FIGURE") {
+    } else {
       console.log(id);
-      navigate(`/chat/${id}`)
+      navigate(`/chat/${id}`);
     }
-  }
+  };
 
   useEffect(() => {
     dispatch(getUsers);
@@ -43,7 +41,51 @@ const AllChat = () => {
       });
     }
   }, [error, dispatch]);
-// console.log(users);
+
+  useEffect(() => {
+    let filtered = [];
+
+    if (lineUpUsers.senderId && users.length) {
+      lineUpUsers.Receiverids.forEach((item) => {
+        users.forEach((value) => {
+          if (value._id === item) {
+            filtered.push(value);
+          }
+        });
+      });
+      console.log("ff", filtered);
+      filtered = filtered.reverse();
+      users.forEach((user) => {
+        if (!filtered.some((filteredUser) => filteredUser._id === user._id)) {
+          filtered.push(user);
+        }
+      });
+
+      setFilterdusers(filtered);
+    } else {
+      if (!filterdusers.length > 0&&users.length>0) {
+        if (user?.lineUpList) {
+          // console.log();
+          user.lineUpList.Receiverids.forEach((item) => {
+            users?.forEach((value) => {
+              if (value._id === item) {
+                filtered.push(value);
+              }
+            });
+          });
+          console.log(filtered);
+          filtered = filtered.reverse();
+          users.forEach((user) => {
+            if (!filtered.some((filteredUser) => filteredUser._id === user._id)) {
+              filtered.push(user);
+            }
+          });
+          setFilterdusers(filtered)
+        }
+      }
+    }
+  }, [users, socket, lineUpUsers, user]);
+
   return (
     <Fragment>
       <Header />
@@ -61,13 +103,25 @@ const AllChat = () => {
           />
         </div>
         <div className=" w-100 row justify-content-between mt-1 p-2 ">
-          
-          { users.length>=0 &&users.map(user=><ListProfile key={user._id} user={user} handleAllChatClick={handleAllChatClick} />)}
-          
-          
+          {filterdusers.length > 0
+            ? filterdusers.map((user) => (
+                <ListProfile
+                  key={user._id}
+                  user={user}
+                  handleAllChatClick={handleAllChatClick}
+                />
+              ))
+            : users.length > 0 &&
+              users.map((user) => (
+                <ListProfile
+                  key={user._id}
+                  user={user}
+                  handleAllChatClick={handleAllChatClick}
+                />
+              ))}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </Fragment>
   );
 };

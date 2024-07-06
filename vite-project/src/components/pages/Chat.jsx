@@ -23,9 +23,10 @@ const {onlineUsers=[],socket}=useSocketContext()
   const {id}=useParams()
   const srlOp =useRef(null)
   const [refresh,setrefresh]=useState(true)
-  
+  const inputRef=useRef(null)
 
   const {
+    user:loginuser,
     users = [],
     loading = false,
     isAuthenticatedUser = false,
@@ -62,8 +63,8 @@ const {onlineUsers=[],socket}=useSocketContext()
 
     if(!inputMessage||!id)return 
 
-    
-    socket?.emit('sendMessage',{message:inputMessage,id})
+// console.log(loginuser);
+    socket?.emit('sendMessage',{message:inputMessage,id,senderId:loginuser._id,users})
     setrefresh(!refresh)
 
     dispatch(sendSingleMessage(inputMessage,id))
@@ -75,9 +76,8 @@ const {onlineUsers=[],socket}=useSocketContext()
   
   useEffect(()=>{
 
+
   socket?.on('newMessage',(mess)=>{
-
-
     setTimeout(() => {
       dispatch(GetAllCoversationMessage(id))
       if (srlOp.current) {
@@ -87,7 +87,12 @@ const {onlineUsers=[],socket}=useSocketContext()
     
 })
 autoScroll()
-   return ()=>socket?.off('newMessage')
+    
+    if(inputRef.current){
+      inputRef.current.focus()
+    }
+
+   return ()=>{socket?.off('newMessage')}
 
 },[socket,refresh])
 
@@ -126,7 +131,7 @@ useEffect(() => {
       </div>}
       
         <form action="#" onSubmit={handleSubmit} className=" form-gruop  w-100 d-flex justify-content-evenly mb-1  position-fixed bottom-0">
-        <input type="text" name="" value={inputMessage} onChange={e=>setinputMessage(e.target.value)} id="chatInput" className="form-control p-3" placeholder="Message" />
+        <input type="text" name="" ref={inputRef} value={inputMessage} onChange={e=>setinputMessage(e.target.value)} id="chatInput" className="form-control p-3" placeholder="Message" />
         <label htmlFor="chatInput" hidden  className="form-label">chatInput </label>
         </form>
 
