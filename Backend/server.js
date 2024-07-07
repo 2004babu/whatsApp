@@ -23,9 +23,8 @@ app.use(express.static(path.join(__dirname, "./public")));
 app.use(cookieParser());
 app.use(express.json());
 
-
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin:true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
   credentials: true, // Allow cookies and credentials to be sent
@@ -33,6 +32,8 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
+
+
 
 const error = require("./middleware/error.js");
 // API routes
@@ -46,13 +47,8 @@ app.use("/api/users/", userRouter);
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use(express.static(path.join(__dirname, "../vite-project/dist")));
 
-// app.get('/', (req, res) => {
-//   console.log('GET / request received');
-//   res.setHeader('Cache-Control', 'no-store'); // Disable caching
-//   res.status(200).json({ message: "Hello from the backend root!" });
-// });
 
-// Catch-all route for all other requests
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, "../vite-project/dist/index.html"));
 });

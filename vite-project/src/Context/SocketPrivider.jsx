@@ -17,7 +17,7 @@ export const SocketPrivider = ({ children }) => {
 
   useEffect(() => {
     if (user && user._id) {
-      const socketInstatnce = io("ws://localhost:8000", {
+      const socketInstatnce = io("http://localhost:8000", {
         query: {
           userId: user._id,
         },

@@ -11,6 +11,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useSocketContext } from "../../Context/SocketPrivider";
 
 const AllChat = () => {
+
   const { socket = {}, onlineUsers, lineUpUsers = [] } = useSocketContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
