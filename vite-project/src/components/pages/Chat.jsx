@@ -68,7 +68,7 @@ const {onlineUsers=[],socket}=useSocketContext()
     setrefresh(!refresh)
 
     dispatch(sendSingleMessage(inputMessage,id))
-   
+  //  console.log('dis');
     setinputMessage('')
 
   }
@@ -80,9 +80,10 @@ const {onlineUsers=[],socket}=useSocketContext()
   socket?.on('newMessage',(mess)=>{
     setTimeout(() => {
       dispatch(GetAllCoversationMessage(id))
+      // console.log('dispatch');
       if (srlOp.current) {
         srlOp.current.scrollTo(0, srlOp.current.scrollHeight);
-      }    }, 100);
+      }    }, 200);
   
     
 })
@@ -95,7 +96,9 @@ autoScroll()
    return ()=>{socket?.off('newMessage')}
 
 },[socket,refresh])
-
+if (socket) {
+  console.log('socket');
+}
 useEffect(() => {
  autoScroll()
 }, [refresh,conversation]);
