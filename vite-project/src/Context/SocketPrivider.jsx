@@ -17,7 +17,8 @@ export const SocketPrivider = ({ children }) => {
 
   useEffect(() => {
     if (user && user._id) {
-      const socketInstatnce = io("http://localhost:8000", {
+      const socketInstatnce = io( import.meta.env.VITE_SOCKET_SERVER_URL
+        , {
         query: {
           userId: user._id,
         },
@@ -27,7 +28,7 @@ export const SocketPrivider = ({ children }) => {
         // console.log(users);
       });
       socketInstatnce?.on('userLineUp',userLineUp=>{
-        console.log(userLineUp);
+        // console.log(userLineUp);
         setLineUpusers(userLineUp)
       })
       // console.log(lineupusers);

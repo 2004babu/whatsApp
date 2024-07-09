@@ -20,9 +20,7 @@ import UploadStatus from "./components/StatusPages/UploadStatus";
 
 function App() {
 
-  const socketServerUrl = import.meta.env.REACT_APP_SOCKET_SERVER_URL;
 
-  console.log(socketServerUrl);
   const dispacth = useDispatch();
   const {
     user = {},
