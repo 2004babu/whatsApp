@@ -58,7 +58,7 @@ const messgaeSlice = createSlice({
     },
     sendMessageSuccess(state, action) {
 
-      // console.log(action.payload?.messages,action.payload?.conversat[ions);
+      // console.log(action.payload?.messages,action.payload?.conversations);
 
       if(action.payload?.messages&&action.payload?.conversations){
         return{

@@ -5,4 +5,5 @@ const route=express.Router()
 
 route.get('/',isAuthenticatedUser,getAllUsers)
 
+
 module.exports=route

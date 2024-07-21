@@ -65,10 +65,11 @@ exports.getMessages = catchAsyncError( async (req, res, next) => {
     const user = req.user;
     const { id } = req.params;
 
-    if (!user || !id) {
+    if (!user._id || !id) {
       return next(new ErrorHandler("got Something Wrong...."));
     }
 
+  
     const thatconversation = await conversationModel.findOne({
       participants: { $all: [user._id, id] },
     }).populate('messages');

@@ -31,8 +31,8 @@ export const GetAllCoversationMessage=(id)=>async(dispatch)=>{
         dispatch(sendMessageRequest())
         const {data}=await axios.post(`/api/message/${id}`,{},config)
         
-        dispatch(sendMessageSuccess(data))
         console.log(data);
+        dispatch(sendMessageSuccess(data))
 
     } catch (error) {
         console.log('errror in get meessage Actions',error.message);

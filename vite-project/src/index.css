@@ -52,3 +52,85 @@ bottom: 0px;
   transform: translate(45px,4px);
   
   }
+
+
+
+
+
+
+
+  .myStatus{
+    object-fit: cover;
+    border-radius: 50%;
+
+  }
+  .video{
+    object-fit: cover;
+   
+
+  }
+
+  .isStatus{
+    border: 3px solid rgba(240, 120, 7, 0.634);
+  }
+  .isViewedStatus{
+    border: 3px solid rgba(137, 136, 135, 0.634);
+  }
+
+.viewCounter{
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(200, 187, 187, 0.237);
+  z-index: 10;
+  width: 100%;
+  height: 70px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(20px);
+}
+
+.sendMessage{
+  position: absolute;
+  transform: translate(190px);
+}
+
+.dropdownContainer{
+  height: fit-content;
+  width: 100px;
+  background: red;
+  position: absolute;top: 0px;
+  left: -120px;
+}
+
+/* 
+///////// */
+.container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.inner-div {
+  position: absolute;
+  bottom: -100%; /* Start hidden below the container */
+  width: 100%;
+  height: 50%; /* Adjust the height as needed */
+  background-color: lightblue; /* Adjust the color as needed */
+  transition: bottom 0.5s ease-in-out;
+}
+
+.inner-div.show {
+  bottom: 0;
+}
+
+
+.request::after{
+  height: 10px;
+  width:  10px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  content: '';
+  transform: translate(-28px,-4px);
+}

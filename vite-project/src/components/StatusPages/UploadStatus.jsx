@@ -1,14 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStatus } from "../../Actions/authActions";
+import { useNavigate } from "react-router-dom";
+import { useSocketContext } from "../../Context/SocketPrivider";
 
 const UploadStatus = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [uploadEmoji, setuploadEmoji] = useState("");
   const [uploadStatus, setUploadStatus] = useState("");
+
+
+
+  const navigate = useNavigate();
   const videoRef = useRef(null);
-const dispatch=useDispatch()
+  const dispatch = useDispatch();
+
+  const {socket={}}=useSocketContext()
+  const {user={}}=useSelector(state=>state.authState)
+
   const handlePlayPuase = () => {
     if (videoRef.current.paused) {
       videoRef.current.play();
@@ -20,23 +30,34 @@ const dispatch=useDispatch()
   const handleUploadFile = async (e) => {
     const file = e.target.files[0];
     console.log(file);
-    setSelectedFile(file)
+    setSelectedFile(file);
     const newfile = URL.createObjectURL(file);
     setPreviewUrl(newfile);
   };
-
+  
   const submitHandler = async (e) => {
-    e.preventDefault();
-    if (selectedFile) {
-        const formData=new FormData()
-        formData.append('status',selectedFile)
-        formData.append('uploadEmoji',uploadEmoji)
-
-        dispatch(setStatus(formData))
+    
+    try {
+      e.preventDefault();
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("status", selectedFile);
+        formData.append("uploadEmoji", uploadEmoji);
+        dispatch(setStatus(formData));
+        socket.emit('uploadStatus',user)
+    
+        
+        navigate("/allStatus");
+    
+      }
+      
+    } catch (error) {
+      console.error("Error uploading status:", error);
+    }finally{
+      socket?.close('uploadStatus');
     }
-
-
   };
+    
 
   useEffect(() => {
     if (previewUrl && videoRef?.current) {
@@ -60,7 +81,10 @@ const dispatch=useDispatch()
               onClick={handlePlayPuase}
               style={{ objectFit: "cover" }}
             ></video>
-            <div className="uploadEmoji position-sticky bottom-0 w-100 bg-white ">
+            <form
+              onSubmit={submitHandler} 
+              className="uploadEmoji position-sticky bottom-0 w-100 bg-white "
+            >
               <input
                 type="text"
                 className="p-3 w-75 mb-2 rounded "
@@ -77,11 +101,10 @@ const dispatch=useDispatch()
               <button
                 type="submit"
                 className="btn btn-success px-3 p-y-2  ms-4"
-                onClick={submitHandler}
               >
                 <i className="fa-solid fa-paper-plane"></i>
               </button>
-            </div>
+            </form>
           </div>
           <div
             className="close-Status position-fixed top-0 p-5 w-100 "
@@ -98,7 +121,12 @@ const dispatch=useDispatch()
             </label>
 
             <div className="row h-25 gap-3">
-              <button className=" col-3 btn btn-primary p-2 ">Cancel</button>
+              <button
+                onClick={() => navigate("/")}
+                className=" col-3 btn btn-primary p-2 "
+              >
+                Cancel
+              </button>
               <input
                 type="file"
                 name="uploadfile"

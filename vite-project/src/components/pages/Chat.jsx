@@ -74,31 +74,46 @@ const {onlineUsers=[],socket}=useSocketContext()
   }
 
   
-  useEffect(()=>{
-
-
-  socket?.on('newMessage',(mess)=>{
-    setTimeout(() => {
-      dispatch(GetAllCoversationMessage(id))
-      // console.log('dispatch');
-      if (srlOp.current) {
-        srlOp.current.scrollTo(0, srlOp.current.scrollHeight);
-      }    }, 200);
+  useEffect(() => {
+    const handleConnect = (e) => {
+      // console.log(e);
+      // console.log('Connected with Socket ID:', socket.id);
+    };
+    
+    const handleNewMessage = (mess) => {
+      console.log('Dispatching new message');
+      dispatch(GetAllCoversationMessage(id));
+      setTimeout(() => {   
+        if (srlOp.current) {
+          srlOp.current.scrollTo(0, srlOp.current.scrollHeight);
+        }
+      }, 200);
+    };
   
-    
-})
-autoScroll()
-    
-    if(inputRef.current){
-      inputRef.current.focus()
+    if (socket) {
+      // console.log('socket');
+      socket.on('connect', handleConnect);
+      socket.on('newMessage', handleNewMessage);
     }
+  
+    // Automatically scroll to bottom
+    autoScroll();
+  
+    // Focus input field if it exists
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  
+    // Cleanup event listeners on unmount or dependency change
+    return () => {
+      if (socket) {
+        socket.off('connect', handleConnect);
+        socket.off('newMessage', handleNewMessage);
+      }
+    };
+  }, [socket, refresh]);
+  
 
-   return ()=>{socket?.off('newMessage')}
-
-},[socket,refresh])
-if (socket) {
-  console.log('socket');
-}
 useEffect(() => {
  autoScroll()
 }, [refresh,conversation]);

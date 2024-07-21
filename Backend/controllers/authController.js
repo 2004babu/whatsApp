@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const UserModel = require("../model/userModel");
 const userModel = require("../model/userModel");
@@ -97,7 +98,7 @@ exports.logout = catchAsyncError(async (req, res, next) => {
 
     res
       .status(200)
-      .cookie("userToken", "", { maxAge: 0 })
+      .cookie("token", "", { maxAge: 0 })
       .json({ message: "logout Success " });
   } catch (error) {
     console.error(error.message);
@@ -107,6 +108,7 @@ exports.logout = catchAsyncError(async (req, res, next) => {
 });
 exports.loaduser = catchAsyncError(async (req, res, next) => {
   try {
+    
     const user = req.user;
     if (!user) {
       return next(new ErrorHandler("login first to handle this ."));
@@ -132,25 +134,155 @@ exports.getUserList = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.setStatus = catchAsyncError(async (req, res, next) => {
-  let status;
+exports.setUsersRequest = catchAsyncError(async (req, res, next) => {
+  try {
+    const loginUserId = req.user._id;
+    const requestFor = req.body.id;
 
-  let BASE_URL = `${process.env.BACKEND_URL}`;
+    if (!loginUserId || !requestFor) {
+      return next(new ErrorHandler("Not get id`s"));
+    }
 
-  if (process.env.NODE_ENV === "Prodection") {
-    BASE_URL = `${req.protocol}://${req.get("host")}`;
+    if (!mongoose.Types.ObjectId.isValid(requestFor)) {
+      return next(new ErrorHandler("not Valid Id "));
+    }
+    let currentUser = await userModel.findById(loginUserId);
+    let user = await userModel.findById(requestFor);
+
+    if (!user) {
+      return next(new ErrorHandler("user Not Found "));
+    }
+    // let filtered;
+
+    // currentUser.userRequest=user.userRequest.filter(item=>item.toString()!==loginUserId)
+
+    // user.FriendList.push(loginUserId)
+    // currentUser.FriendList.push(requestFor)
+    // console.log(!user.userRequest.includes(loginUserId));
+
+    if (!user.userRequest.includes(loginUserId)) {
+      user.userRequest.push(loginUserId);
+    }
+    // console.log(user.userRequest);
+    await user.save({ validateBeforeSave: true });
+    const users = await userModel.find({ _id: { $ne: loginUserId } }); //with out current user
+    res.status(201).json({ user: currentUser, users });
+  } catch (error) {
+    console.log(error);
   }
-  if (!req.file) {
-    next(new ErrorHandler('not found your file'),301)
-  }
+});
 
-  status = `${BASE_URL}/uploads/videos/${req.file.originalname}`;
-  const user=await userModel.findById(req.user._id);
-  if(!user){
-    next(new ErrorHandler('user Not found '),401)
-  }
-  user.status=status;
- await user.save({validateBeforeSave:true})
+exports.removeUserRequest = catchAsyncError(async (req, res, next) => {
+  try {
+    const loginUserId = req.user._id;
+    const requestFor = req.params.id;
 
- res.status(201).json({user})
+    if (!loginUserId || !requestFor) {
+      return next(new ErrorHandler("Not get id`s"));
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(requestFor)) {
+      return next(new ErrorHandler("not Valid Id "));
+    }
+
+    let currentUser = await userModel.findById(req.user._id); //current user
+    let user = await userModel.findById(requestFor);
+
+    if (!user) {
+      return next(new ErrorHandler("user Not Found "));
+    }
+    user.userRequest = user.userRequest.filter(
+      (item) => item.toString() !== loginUserId.toString()
+    );
+    currentUser.userRequest = currentUser.userRequest.filter(
+      (item) => item.toString() !== requestFor.toString()
+    );
+    await user.save({ validateBeforeSave: true });
+    await currentUser.save({ validateBeforeSave: true });
+    const users = await userModel.find({ _id: { $ne: loginUserId } }); //with out current user
+    res.status(201).json({ user: currentUser, users });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.acceptUserRequest = catchAsyncError(async (req, res, next) => {
+  try {
+    const loginUserId = req.user._id;
+    const requestFor = req.params.id;
+
+    // console.log(requestFor);
+    if (!loginUserId || !requestFor) {
+      return next(new ErrorHandler("Not get id`s"));
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(requestFor)) {
+      // return next(new ErrorHandler('not Valid Id ',401))
+    }
+
+    let currentUser = await userModel.findById(req.user._id);
+    let user = await userModel.findById(requestFor);
+
+    if (!user) {
+      return next(new ErrorHandler("user Not Found "));
+    }
+    // let filtered;
+
+    currentUser.userRequest = currentUser.userRequest.filter(
+      (item) => item.toString() !== requestFor.toString()
+    );
+    user.userRequest = user.userRequest.filter(
+      (item) => item.toString() !== loginUserId.toString()
+    );
+
+    if (!user.FriendList.includes(loginUserId)) {
+      user.FriendList.push(loginUserId);
+    }
+
+    if (!currentUser.FriendList.includes(requestFor)) {
+      currentUser.FriendList.push(requestFor);
+    }
+
+    await user.save({ validateBeforeSave: true });
+    await currentUser.save({ validateBeforeSave: true });
+    const users = await userModel.find({ _id: { $ne: loginUserId } }); //with out current user
+
+    res.status(201).json({ user: currentUser, users });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.removeFriend = catchAsyncError(async (req, res, next) => {
+  try {
+    const loginUserId = req.user._id;
+    const requestFor = req.params.id;
+
+    if (!loginUserId || !requestFor) {
+      return next(new ErrorHandler("Not get id`s"));
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(requestFor)) {
+      return next(new ErrorHandler("not Valid Id "));
+    }
+    let currentUser = await userModel.findById(req.user._id);
+    let user = await userModel.findById(requestFor);
+
+    if (!user) {
+      return next(new ErrorHandler("user Not Found "));
+    }
+    user.FriendList = user.FriendList.filter(
+      (item) => item.toString() !== loginUserId.toString()
+    );
+    currentUser.FriendList = currentUser.FriendList.filter(
+      (item) => item.toString() !== requestFor.toString()
+    );
+
+    await currentUser.save({ validateBeforeSave: true });
+    await user.save({ validateBeforeSave: true });
+    const users = await userModel.find({ _id: { $ne: loginUserId } }); //with out current user
+    res.status(201).json({ user: currentUser, users });
+  } catch (error) {
+    console.log(error);
+  }
 });

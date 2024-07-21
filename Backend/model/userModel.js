@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const validator = require("mongoose-unique-validator");
-// const { isEmail } = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,8 +16,8 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       required: [true, "Gender is required"],
-      enum: ["Male", "Female","other"],
-      default:'other'
+      enum: ["Male", "Female", "other"],
+      default: "other",
     },
     password: {
       type: String,
@@ -37,7 +35,22 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     },
-    status: {
+    status: [
+      {
+        message: String,
+        Status: String,
+        viewCount: { type: Array, default: [] },
+        createAt: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
+    userRequest: {
+      type: Array,
+      default: [],
+    },
+    FriendList: {
       type: Array,
       default: [],
     },
@@ -57,11 +70,6 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.isValidPassword = async function (enteredpassword) {
   return await bcryptjs.compare(enteredpassword, this.password);
 };
-
-// Plugin to enforce unique validation
-// userSchema.plugin(validator, {
-//   message: "Error, expected {PATH} to be unique. {VALUE} already exists",
-// });
 
 userSchema.methods.getJWTToken = async function (next) {
   return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {

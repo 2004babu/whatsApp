@@ -1,3 +1,4 @@
+import { connect } from "mongoose";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
@@ -23,6 +24,12 @@ export const SocketPrivider = ({ children }) => {
           userId: user._id,
         },
       });
+      const handleConnect = () => {
+        // console.log('Connected with Socket ID:', socketInstatnce?.id);
+      };
+      socketInstatnce.on('connect', handleConnect);
+      
+
       socketInstatnce.on("getOnlineUsers", (users) => {
         setOnlineUser(users);
         // console.log(users);
@@ -38,6 +45,8 @@ export const SocketPrivider = ({ children }) => {
 
       return () =>{
         socketInstatnce.off('userLineUp')
+        socketInstatnce.off('getOnlineUsers')
+        socketInstatnce.off('connect')
         socketInstatnce.close()
 
 
@@ -50,7 +59,7 @@ export const SocketPrivider = ({ children }) => {
       }
       // setOnlineUser([]);
     }
-  }, [user,messages,setLineUpusers,lineUpUsers]); // Ensure user?._id is included in dependency array
+  }, [user,setLineUpusers,lineUpUsers,]); // Ensure user?._id is included in dependency array
   // console.log('messages',messages);
   return (
     <socketContext.Provider value={{ socket, onlineUsers ,messages,lineUpUsers}}>

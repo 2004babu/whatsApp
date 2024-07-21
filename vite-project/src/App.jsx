@@ -17,7 +17,12 @@ import ProductedRoute from "../ProductedRoute";
 import { SocketPrivider } from "./Context/SocketPrivider";
 import { HelmetProvider } from "react-helmet-async";
 import UploadStatus from "./components/StatusPages/UploadStatus";
-
+import AllStatus from "./components/StatusPages/AllStatus";
+import ViewStatus from "./components/StatusPages/ViewStatus";
+import ProtectedRoute from "../ProductedRoute";
+import SwipeComponent from "./components/StatusPages/SwipeComponent";
+import AddRequest from "./components/pages/AddRequest";
+import  Cookie from 'js-cookie'
 function App() {
 
 
@@ -31,7 +36,11 @@ function App() {
 
   useEffect(() => {
     if (!isAuthenticatedUser) {
-      dispacth(loadUser);
+      const token = Cookie.get('token')
+      
+      console.log(token);
+       dispacth(loadUser);
+      
     }
   }, [isAuthenticatedUser, dispacth]);
   return (
@@ -44,12 +53,13 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <ProductedRoute>
+                  <ProtectedRoute>
                     <AllChat />
-                  </ProductedRoute>
+                  </ProtectedRoute>
                 }
               />
               <Route path="/login" element={<Login />} />
+              <Route path="/test" element={<SwipeComponent />} />
               <Route
                 path="/profile"
                 element={
@@ -66,6 +76,18 @@ function App() {
               <Route
                 path="/upload/status"
                 element={isAuthenticatedUser ? <UploadStatus /> : <Login />}
+              />
+              <Route
+                path="/allstatus"
+                element={isAuthenticatedUser ? <AllStatus /> : <Login />}
+              />
+              <Route
+                path="/viewstatus/:id"
+                element={isAuthenticatedUser ? <ViewStatus /> : <Login />}
+              />
+              <Route
+                path="/addrequest"
+                element={isAuthenticatedUser ? <AddRequest /> : <Login />}
               />
 
             </Routes>

@@ -29,6 +29,7 @@ const Login = () => {
       navigate('/')
     }
     if (error) {
+      console.log('errror');
       toast.error(error, {
         onOpen: () => {
           dispatch(clearError());
@@ -78,7 +79,7 @@ const Login = () => {
               </Link>
               <div className="row justify-content-center align-items-center">
                 <button
-                  disabled={loading}
+                  
                   type="submit"
                   className="btn btn-primary btn-block col-3 mt-3"
                 >

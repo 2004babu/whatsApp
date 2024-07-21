@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import {register}from '../../Actions/authActions'
 import {toast }from 'react-toastify'
 import { clearError } from '../../Slices/authSlice';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 
 const Register = () => {
@@ -24,6 +24,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [gender, setGender] = useState('');
   // console.log(gender);
+
+  const navigate=useNavigate()
 const dispatch=useDispatch()
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,11 +54,12 @@ const dispatch=useDispatch()
       }
     }
  await   reader.readAsDataURL(file)
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
   }
 useEffect(()=>{
 if(isAuthenticatedUser){
   toast.success('Register Success')
+  navigate('/')
 }
 if(error){
   toast.error(error,{onOpen:()=>{
@@ -116,7 +119,7 @@ if(error){
 
           <div className="w-100 row form-gruop mt-3">
             {/* <label htmlFor="registeruploadFile">Choose File</label> */}
-            <input type="file"className='form-control p-2 col-8' onChange={(e)=>handlefiles(e)}  />
+            <input type="file"className='form-control p-2 col-8' accept='png' onChange={(e)=>handlefiles(e)}  />
             <figure className="figure col-4 m-0 mt-1">
               <img src={avatarPreview} height={'50px'} width={'50px'} alt="preview image" className="figure-img img rounded" />
             </figure>
@@ -147,7 +150,7 @@ if(error){
             <div className="row">
            <Link to={'/login'} className=' color-secondary mt-2 link-opacity-100-hover text-end' > login</Link>
             <div className="row justify-content-center align-items-center">
-            <button  disabled={loading} type="submit" className="btn btn-primary btn-block col-3 mt-3">
+            <button  type="submit" className="btn btn-primary btn-block col-3 mt-3">
               Submit
             </button>
             </div>

@@ -1,51 +1,3 @@
-// const {signUp, login, logout, loaduser, getUserList, setStatus} =require('../controllers/authController')
-// const isAuthenticatedUser =require('../middleware/isAuthenticatedUser.js')
-// const express =require('express')
-// const route=express.Router()
-// const path=require('path')
-
-// const multer=require('multer')
-
-// const storage=multer.diskStorage({
-   
-//    destination:function(req,file,cb){
-
-//     if (file.mimetype.startsWith('image/')) {
-//         cb(null,path.join(__dirname,'uploads/users'))
-//     }else if(file.mimetype.startsWith('video/')){
-//         cb(null,path.join(__dirname,'uploads/status'))
-//     }else{
-//         cb(new Error('not a video or Image ....'),false)
-
-//     }
-//    },
-//    filename:function(req,file,cb){
-//     cb(null,file.originalname)
-//    }
-
-
-// })
-// const fileFilter=(req,file,cb)=>{
-//     if (file.mimetype.startsWith('Image/')||file.mimetype.startsWith('video/')) {
-//         cb(null,true)
-//     }else{
-//         cb(new Error('not a video or Image ....'),false)
-        
-//     }
-// }
-
-
-// const uploads=multer({storage:storage,fileFilter})
-
-
-
-// route.post('/signup',uploads.single('avatar'),signUp)
-// route.post('/login',login)
-// route.delete('/logout',isAuthenticatedUser,logout)
-// route.get('/loaduser',isAuthenticatedUser,loaduser)
-// route.get('/Receiverlist',isAuthenticatedUser,getUserList)
-// route.post('/status', isAuthenticatedUser, uploads.single('file'), setStatus);
-//  module.exports =route
 
 const {
     signUp,
@@ -53,13 +5,18 @@ const {
     logout,
     loaduser,
     getUserList,
-    setStatus,
+    setUsersRequest,
+    removeUserRequest,
+    acceptUserRequest,
+    removeFriend,
+    
   } = require('../controllers/authController');
   const isAuthenticatedUser = require('../middleware/isAuthenticatedUser.js');
   const express = require('express');
   const route = express.Router();
   const path = require('path');
   const multer = require('multer');
+const { viewCount,setStatus, deleteStatus } = require('../controllers/statusController.js');
   
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -91,7 +48,17 @@ const {
   route.delete('/logout', isAuthenticatedUser, logout);
   route.get('/loaduser', isAuthenticatedUser, loaduser);
   route.get('/Receiverlist', isAuthenticatedUser, getUserList);
+
+  //addusers requests ,accepts,rejects
+  route.post('/adduser', isAuthenticatedUser, setUsersRequest);
+  route.delete('/adduser/:id', isAuthenticatedUser, removeUserRequest);
+  route.post('/acceptuser/:id', isAuthenticatedUser, acceptUserRequest);
+  route.delete('/removefriend/:id', isAuthenticatedUser, removeFriend);
+  ///status
+
   route.post('/status', isAuthenticatedUser, uploads.single('status'), setStatus);
+route.post('/status/count',isAuthenticatedUser,viewCount)
+route.delete('/status/:statusId',isAuthenticatedUser,deleteStatus)
   
   module.exports = route;
   
