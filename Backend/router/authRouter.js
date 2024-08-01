@@ -17,6 +17,9 @@ const {
   const path = require('path');
   const multer = require('multer');
 const { viewCount,setStatus, deleteStatus } = require('../controllers/statusController.js');
+const url =require('url')
+
+
   
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -29,7 +32,18 @@ const { viewCount,setStatus, deleteStatus } = require('../controllers/statusCont
       }
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname);
+
+    if (file.mimetype.startsWith('video/')) {
+      const uri=encodeURIComponent(file.originalname)
+
+      const parsedUrl = url.parse(uri);
+      // console.log(parsedUrl,"parsedUrl");
+const decodedFileName = decodeURIComponent(path.basename(parsedUrl.pathname));
+
+      cb(null, decodedFileName);
+    }else{
+      cd (null ,file.originalname)
+    }
     },
   });
   

@@ -1,6 +1,8 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const UserModel = require("../model/userModel");
 const ErrorHandler = require("../utils/ErrorHandler");
+const url =require('url')
+const path =require('path')
 
 exports.setStatus = catchAsyncError(async (req, res, next) => {
   let status;
@@ -15,7 +17,15 @@ exports.setStatus = catchAsyncError(async (req, res, next) => {
     next(new ErrorHandler("not found your file"), 301);
   }
 
-  status = `${BASE_URL}/uploads/videos/${req.file.originalname}`;
+
+  const encodedvideo =encodeURIComponent(req.file.originalname)
+  const parsedUrl =url.parse(encodedvideo)
+console.log(parsedUrl);
+  const decodedFileName =decodeURIComponent(path.basename(parsedUrl.pathname))
+
+console.log(decodedFileName,'decodedFileName');
+
+  status = `${BASE_URL}/uploads/videos/${decodedFileName}`;
   const user = await UserModel.findById(req.user._id);
   if (!user) {
     next(new ErrorHandler("user Not found "), 401);
