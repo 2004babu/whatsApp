@@ -75,9 +75,9 @@ const {onlineUsers=[],socket}=useSocketContext()
 
   
   useEffect(() => {
-    const handleConnect = (e) => {
-      // console.log(e);
-      // console.log('Connected with Socket ID:', socket.id);
+    const handleConnect = () => {
+      // console.log(socket);
+      console.log('Connected with Socket ID:', socket.id);
     };
     
     const handleNewMessage = (mess) => {

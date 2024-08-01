@@ -25,7 +25,7 @@ export const SocketPrivider = ({ children }) => {
         },
       });
       const handleConnect = () => {
-        // console.log('Connected with Socket ID:', socketInstatnce?.id);
+        console.log('Connected with Socket ID:', socketInstatnce?.id);
       };
       socketInstatnce.on('connect', handleConnect);
       
@@ -57,10 +57,8 @@ export const SocketPrivider = ({ children }) => {
         socket.close();
         SetSocket(null);
       }
-      // setOnlineUser([]);
     }
   }, [user,setLineUpusers,lineUpUsers,]); // Ensure user?._id is included in dependency array
-  // console.log('messages',messages);
   return (
     <socketContext.Provider value={{ socket, onlineUsers ,messages,lineUpUsers}}>
       {children}

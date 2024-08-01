@@ -22,9 +22,9 @@ const setSocket = (server) => {
   });
 
   let users = [];
+  
   let onlineUsers = {}; // {userId: socket.id}
-
-  // console.log(onlineUsers);
+  console.log('evry',onlineUsers);
   io.on("connect", (socket) => {
     const userId = socket.handshake.query.userId;
     if (userId !== undefined) onlineUsers[userId] = socket.id;
@@ -34,7 +34,6 @@ const setSocket = (server) => {
         Receiverids: [],
       };
       const isAlive = users.filter((item) => item.senderId === e.senderId);
-
       if (isAlive.length > 0) {
         users.forEach((item) => {
           if (item.senderId === e.senderId) {
@@ -79,15 +78,17 @@ const setSocket = (server) => {
         console.error("Error from socket.io sending user list:", error);
       }
 
-      console.log(
-        "e.id, onlineUsers[e.id],",
-        e.id,
-        onlineUsers,
-        socket.id,
-        "onlineUsers[e.id]"
-      );
+      // console.log(
+      //   "e.id, onlineUsers[e.id],",
+      //   e.id,
+      //   onlineUsers,
+      //   socket.id,
+      //   "onlineUsers[e.id]"
+      // );
       const senderId = onlineUsers[e.id];
-      console.log(senderId);
+      console.log("senderId",senderId);
+      console.log("onlineUsers",onlineUsers);
+      console.log("e.id",e.id);
       socket.to(senderId).emit("newMessage", e);
     }, 1000); // Consider increasing throttle duration if needed
 
@@ -113,7 +114,9 @@ const setSocket = (server) => {
       }
     })
     socket.on("disconnect", () => {
+      console.log("disconnect onlineUsers",onlineUsers);
       delete onlineUsers[userId];
+      console.log("disconnect onlineUsers",onlineUsers);
       io.emit("getOnlineUsers", Object.keys(onlineUsers));
     });
   });

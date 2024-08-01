@@ -3,7 +3,6 @@ const ErrorHandler=require('../utils/ErrorHandler')
 const jwt =require('jsonwebtoken')
 
 module.exports=async(req,res,next)=>{
-    console.log(req.cookies.token);
    //  console.log(req);
 
  const token =req.cookies.token;
@@ -19,15 +18,15 @@ module.exports=async(req,res,next)=>{
   
 
  const {id}=jwt.verify(token,process.env.JWT_SECRET);
- console.log(id);
- console.log(token);
+//  console.log(id);
+//  console.log(token);
  
  if(!id){
     return next(new ErrorHandler('invalid Token ... ',404))
  }
  const user=await UserModel.findById(id);
  
- console.log(user);
+//  console.log(user);
  
  if(!user){
    //  return next(new ErrorHandler('login first  ... ',404))

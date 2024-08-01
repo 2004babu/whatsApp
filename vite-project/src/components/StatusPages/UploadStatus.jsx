@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStatus } from "../../Actions/authActions";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSocketContext } from "../../Context/SocketPrivider";
 
 const UploadStatus = () => {
@@ -9,15 +9,15 @@ const UploadStatus = () => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [uploadEmoji, setuploadEmoji] = useState("");
   const [uploadStatus, setUploadStatus] = useState("");
+  const location = useLocation();
 
-
-
+  console.log(location);
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const dispatch = useDispatch();
 
-  const {socket={}}=useSocketContext()
-  const {user={}}=useSelector(state=>state.authState)
+  const { socket = {} } = useSocketContext();
+  const { user = {} } = useSelector((state) => state.authState);
 
   const handlePlayPuase = () => {
     if (videoRef.current.paused) {
@@ -34,9 +34,8 @@ const UploadStatus = () => {
     const newfile = URL.createObjectURL(file);
     setPreviewUrl(newfile);
   };
-  
+
   const submitHandler = async (e) => {
-    
     try {
       e.preventDefault();
       if (selectedFile) {
@@ -44,26 +43,26 @@ const UploadStatus = () => {
         formData.append("status", selectedFile);
         formData.append("uploadEmoji", uploadEmoji);
         dispatch(setStatus(formData));
-        socket.emit('uploadStatus',user)
-    
-        
+        socket.emit("uploadStatus", user);
+
         navigate("/allStatus");
-    
       }
-      
     } catch (error) {
       console.error("Error uploading status:", error);
-    }finally{
-      socket?.close('uploadStatus');
+    } finally {
+      socket?.close("uploadStatus");
     }
   };
-    
 
   useEffect(() => {
     if (previewUrl && videoRef?.current) {
       videoRef.current.play();
     }
   }, [videoRef, previewUrl]);
+
+  const handelCancelClick = () => {
+    navigate(location.state.from);
+  };
 
   return (
     <div className="h-100 w-100 row justify-content-center align-items-start m-0 bg-secondary overflow-hidden">
@@ -82,7 +81,7 @@ const UploadStatus = () => {
               style={{ objectFit: "cover" }}
             ></video>
             <form
-              onSubmit={submitHandler} 
+              onSubmit={submitHandler}
               className="uploadEmoji position-sticky bottom-0 w-100 bg-white "
             >
               <input
@@ -122,7 +121,7 @@ const UploadStatus = () => {
 
             <div className="row h-25 gap-3">
               <button
-                onClick={() => navigate("/")}
+                onClick={handelCancelClick}
                 className=" col-3 btn btn-primary p-2 "
               >
                 Cancel

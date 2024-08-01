@@ -13,12 +13,21 @@ import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { clearStatusUploaded } from "../../Slices/authSlice";
 import { format } from "timeago.js";
+import { useStatusUserList } from "../../Context/StatusProvider";
+
 
 const AllStatus = () => {
   const { socket = {}, onlineUsers, lineUpUsers = [] } = useSocketContext();
+  const {statusUser,setStatusUser}=useStatusUserList()
+  // const {logo}=StatusUserList()
+  // console.log(statusUser,setStatusUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [statusUser, setStatusUser] = useState([]);
+  // const [statusUser, setStatusUser] = useState([]);
+
+  // console.log(logo);
+
+
 
   const options = ["Delete"];
 
@@ -31,12 +40,13 @@ const AllStatus = () => {
     isStatusUploaded = null,
   } = useSelector((state) => state.authState);
 
-  const handleOpenStatus = (status, userID, e, statusId) => {
+  const handleOpenStatus = (status, userID, e, statusId,isMyStstus) => {
     if (user._id === userID && !user.status.length > 0) {
       navigate("/upload/status");
       return;
     } else {
       // console.log('es;');
+      // console.log(e?.target?.tagName);
     }
 
    
@@ -48,8 +58,13 @@ const AllStatus = () => {
     if (taglist.includes(e?.target?.tagName)) {
       dispatch(deleteStatus(statusId));
     } else {
+      if (isMyStstus) {
+        
+        navigate(`/viewstatus/${userID}`, { state: { from: "/allstatus" ,isMyStstus} });
+        return
+      }
       navigate(`/viewstatus/${userID}`, { state: { from: "/allstatus" } });
-      dispatch(viewCounter({ statusOwner: userID }));
+      
     }
 
   };
@@ -77,11 +92,36 @@ const AllStatus = () => {
             return null;
           }
         })
-        .filter((item) => item !== null);
+        .filter((item) => item !== null).reduce((sortedArray,currentArray)=>{
+
+          let Added=false;
+          for(let i=0 ;i <sortedArray?.length;i++){
+            if (new Date(currentArray?.status[currentArray?.status?.length-1]?.createAt)>new Date(sortedArray[i]?.status[currentArray?.status?.length-1]?.createAt)) {
+              console.log('enter');
+              sortedArray.splice(i,0,currentArray)
+              Added=true;
+              break
+            }
+          }
+
+          if (!Added) {
+            sortedArray.push(currentArray)
+          }
+          return sortedArray
+        },[])
+
+        
+        // console.log(filtered);
+
       setStatusUser(filtered);
     }
   }, [users, isStatusUploaded]);
+// console.log(users);
 
+
+useEffect(()=>{
+dispatch(getUsers)
+},[])
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -99,6 +139,7 @@ const AllStatus = () => {
       }
     }
   }, [socket, dispatch]);
+
   return (
     <Fragment>
       <div className="status  h-100 w-100 p-3">
@@ -110,7 +151,7 @@ const AllStatus = () => {
               user?.status[0]?.Status,
               user?._id,
               e,
-              user?.status[0]?._id
+              user?.status[0]?._id,true
             )
           }
           className="w-100  d-flex gap-3  p-2 mt-2 justify-content-between align-items-center"
@@ -160,7 +201,7 @@ const AllStatus = () => {
                         handleOpenStatus(
                           item?.status[0].Status,
                           item?._id,
-                          null
+                          null,null,null
                         )
                       }
                       className="w-100  justify-content-start align-items-center  d-flex gap-3  p-2 mt-2"
@@ -180,13 +221,16 @@ const AllStatus = () => {
 
                       <div className="h-100 row d-flex justify-content-start align-items-start">
                         <h1 className="mt-2">{item.name}</h1>
-                        <p>{format(item?.status[0]?.createAt)}</p>
+                        <p>{format(new Date(item?.status[item.status.length -1]?.createAt))}</p>
                       </div>
                     </div>
                   </Fragment>
                 )
             )
           : ""}
+      </div>
+      <div onClick={()=>navigate("/upload/status",{state:{from:'/allstatus'}})} className="AddStatusPlus">
+        <i className="fa fa-solid fa-plus  " style={{fontSize: 'large',fontWeight: '900'}}></i>
       </div>
       <Footer />
     </Fragment>

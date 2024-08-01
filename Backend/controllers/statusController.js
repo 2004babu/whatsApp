@@ -20,6 +20,12 @@ exports.setStatus = catchAsyncError(async (req, res, next) => {
   if (!user) {
     next(new ErrorHandler("user Not found "), 401);
   }
+  let filteredStatus=user.status?.filter(item=>{
+    return  new Date(item.createAt) >=Date.now()-12*60*60*100 // 1:10  1:09 -11
+  })
+  
+  console.log("filteredStatus",filteredStatus,12*60*60*100);
+  user.status=filteredStatus
   user.status.push({ message: uploadEmoji, Status: status });
   await user.save({ validateBeforeSave: true });
 
@@ -28,18 +34,36 @@ exports.setStatus = catchAsyncError(async (req, res, next) => {
 
 exports.viewCount = catchAsyncError(async (req, res, next) => {
   const viewUser = req.user._id;
-  const { statusOwner } = req.body;
+  const { statusOwner,statusId } = req.body;
   if (!statusOwner && !viewUser) {
     res.status(401).json({ messgae: "Some Problem Found  " });
   }
-
-  const user = await UserModel.findById(statusOwner);
+    const user = await UserModel.findById(statusOwner);
+    
   if (!user) {
     res.status(401).json({ messgae: "not Found Your Id " });
   }
-  if (!user.status[0].viewCount.includes(viewUser)) {
-    user.status[0].viewCount.push(viewUser);
-  }
+
+  let filtered;
+
+ 
+
+
+ user.status= user.status.map(item=>{
+  
+   if (item._id===statusId && !item.viewCount.includes(viewUser)){
+     
+    item.viewCount.push(viewUser)
+   
+    return item
+   }
+   return item
+  })
+console.log("user",user.status);
+
+  // if (!user.status[0].viewCount.includes(viewUser)) {
+  //   user.status[0].viewCount.push(viewUser);
+  // }
   // console.log(user.status);
   await user.save({ validateBeforeSave: true });
 

@@ -20,12 +20,9 @@ import UploadStatus from "./components/StatusPages/UploadStatus";
 import AllStatus from "./components/StatusPages/AllStatus";
 import ViewStatus from "./components/StatusPages/ViewStatus";
 import ProtectedRoute from "../ProductedRoute";
-import SwipeComponent from "./components/StatusPages/SwipeComponent";
 import AddRequest from "./components/pages/AddRequest";
-import  Cookie from 'js-cookie'
+import { StatusProvider } from "./Context/StatusProvider";
 function App() {
-
-
   const dispacth = useDispatch();
   const {
     user = {},
@@ -36,11 +33,7 @@ function App() {
 
   useEffect(() => {
     if (!isAuthenticatedUser) {
-      const token = Cookie.get('token')
-      
-      console.log(token);
-       dispacth(loadUser);
-      
+      dispacth(loadUser);
     }
   }, [isAuthenticatedUser, dispacth]);
   return (
@@ -48,50 +41,50 @@ function App() {
       <ToastContainer />
       <BrowserRouter>
         <SocketPrivider>
-          <HelmetProvider>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <AllChat />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/test" element={<SwipeComponent />} />
-              <Route
-                path="/profile"
-                element={
-                  <ProductedRoute>
-                    <Profile />
-                  </ProductedRoute>
-                }
-              />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/chat/:id"
-                element={isAuthenticatedUser ? <Chat /> : <Login />}
-              />
-              <Route
-                path="/upload/status"
-                element={isAuthenticatedUser ? <UploadStatus /> : <Login />}
-              />
-              <Route
-                path="/allstatus"
-                element={isAuthenticatedUser ? <AllStatus /> : <Login />}
-              />
-              <Route
-                path="/viewstatus/:id"
-                element={isAuthenticatedUser ? <ViewStatus /> : <Login />}
-              />
-              <Route
-                path="/addrequest"
-                element={isAuthenticatedUser ? <AddRequest /> : <Login />}
-              />
-
-            </Routes>
-          </HelmetProvider>
+          <StatusProvider>
+            <HelmetProvider>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <AllChat />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProductedRoute>
+                      <Profile />
+                    </ProductedRoute>
+                  }
+                />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/chat/:id"
+                  element={isAuthenticatedUser ? <Chat /> : <Login />}
+                />
+                <Route
+                  path="/upload/status"
+                  element={isAuthenticatedUser ? <UploadStatus /> : <Login />}
+                />
+                <Route
+                  path="/allstatus"
+                  element={isAuthenticatedUser ? <AllStatus /> : <Login />}
+                />
+                <Route
+                  path="/viewstatus/:id"
+                  element={isAuthenticatedUser ? <ViewStatus /> : <Login />}
+                />
+                <Route
+                  path="/addrequest"
+                  element={isAuthenticatedUser ? <AddRequest /> : <Login />}
+                />
+              </Routes>
+            </HelmetProvider>
+          </StatusProvider>
         </SocketPrivider>
       </BrowserRouter>
     </Fragment>

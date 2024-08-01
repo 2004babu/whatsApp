@@ -17,7 +17,7 @@ exports.getAllUsers = catchAsyncError( async (req, res, next) => {
       return next(new ErrorHandler("No users Here", 401));
     }
     
-    console.log("user");
+    
     let items
     
     items=await Promise.all(allUsers.map( async (item,index)=>{

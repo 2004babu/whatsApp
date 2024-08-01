@@ -31,23 +31,24 @@ const Profile = () => {
           <div onClick={() => navigate('/')} className="col-1 w-100">
             <i className="fa-solid fa-arrow-left"></i>
           </div>
-          <div className="col-11 card mt-5 p-2 w-100">
+          <div className="col-11 card mt-5 p-2 d-flex justify-content-center align-items-center ">
             <img
-              height={'50%'}
-              width={'50%'}
+              height={'250px'}
+              width={'250px'}
+              style={{borderRadius:"50%"}}
               src={user?.avatar ? user.avatar : '/unknown.png'}
-              className="card-img-top rounded-circle"
+              className=" rounded-circle mt-3"
               alt="..cakee."
             />
-            <div className="card-body">
+            <div className="card-body mt-2 p-2">
               <h5 className="card-title">{user?.name}</h5>
               <p className="card-text">{user?.email}</p>
               <p className="card-text">{user?._id}</p>
             </div>
-            <ul className="list-group list-group-flush">
+            <ul className="list-group list-group-flush d-flex justify-content-center align-items-center">
               <li className="list-group-item">Gender: {user?.gender}</li>
               <li  onClick={handleLogout} className="list-group-item text-primary">
-                logout
+                logout  <i className="fa-solid fa-right-from-bracket"></i>
               </li>
             </ul>
           </div>

@@ -134,7 +134,7 @@ const AddRequest = () => {
         })
         .filter((item) => item !== null);
         // console.log(filter);
-        console.log(filter);
+        // console.log(filter);
         setFriendList(filter);
       } else {
         setFriendList([]);

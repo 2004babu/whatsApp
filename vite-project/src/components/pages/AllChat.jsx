@@ -23,12 +23,13 @@ const AllChat = () => {
     isAuthenticatedUser = false,
     error = null,
   } = useSelector((state) => state.authState);
+  const [search, setSearch] = useState("");
 
   const handleAllChatClick = (e, id) => {
     if (e.target.tagName === "IMG" || e.target.tagName === "FIGURE") {
       navigate(`/viewstatus/${id}`, { state: { from: "/" } });
       // dispatch(viewCounter({ statusOwner: userID }));
-      dispatch(viewCounter({statusOwner:id}))
+      dispatch(viewCounter({ statusOwner: id }));
       // console.log(location);
     } else {
       // console.log(id);
@@ -37,7 +38,6 @@ const AllChat = () => {
   };
 
   useEffect(() => {
-   
     if (error) {
       toast.error(error, {
         onOpen: () => {
@@ -48,14 +48,12 @@ const AllChat = () => {
   }, [error, dispatch]);
   // console.log(filterdusers);
 
-  useEffect(()=>{
-    dispatch(getUsers);
-  },[])
   useEffect(() => {
-
-
+    dispatch(getUsers);
+  }, []);
+  useEffect(() => {
     let filtered = [];
-// console.log(lineUpUsers.senderId , users.length);
+    // console.log(lineUpUsers.senderId , users.length);
     if (lineUpUsers.senderId && users.length) {
       lineUpUsers.Receiverids.forEach((item) => {
         users.forEach((value) => {
@@ -74,11 +72,16 @@ const AllChat = () => {
       filtered = filtered.filter((item) =>
         item?.FriendList?.includes(user?._id)
       );
-      console.log(filtered);
+
+      if (search) {
+        filtered = filtered.filter((item) => {
+          return item.name.toLowerCase().includes(search.toLowerCase());
+        });
+      }
       setFilterdusers(filtered);
     } else {
       // console.log(filterdusers,!filterdusers.length > 0 && users.length > 0);
-      if ( users.length > 0) {
+      if (users.length > 0) {
         if (user?.lineUpList) {
           // console.log();
           user.lineUpList.Receiverids.forEach((item) => {
@@ -100,14 +103,17 @@ const AllChat = () => {
           filtered = filtered.filter((item) =>
             item?.FriendList?.includes(user?._id)
           );
-          // console.log(filtered);
+
+          if (search) {
+            filtered = filtered.filter((item) => {
+              return item.name.toLowerCase().includes(search.toLowerCase());
+            });
+          }
           setFilterdusers(filtered);
         }
       }
     }
-  }, [users, socket, lineUpUsers, user]);
-
-
+  }, [users, socket, lineUpUsers, user, search]);
 
   return (
     <Fragment>
@@ -123,6 +129,8 @@ const AllChat = () => {
             placeholder="Search "
             id="searchInput"
             className="p-3 rounded-4 form-control"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
           />
         </div>
         <div className=" w-100 row justify-content-between mt-1 p-2 ">

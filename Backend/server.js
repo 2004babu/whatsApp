@@ -25,8 +25,8 @@ app.use(express.json());
 
 const corsOptions = {
   origin:true,
-  // methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  // allowedHeaders: ['Content-Type'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
   credentials: true, // Allow cookies and credentials to be sent
 };
 
@@ -46,10 +46,11 @@ app.use("/api/users/", userRouter);
 // Static files and frontend
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use(express.static(path.join(__dirname, "../vite-project/dist")));
+app.use(express.static(path.join(__dirname, "../vite-project/dist/index.html")));
 
 
 
-app.get('*', (req, res) => {
+app.get(['/','*'], (req, res) => {
   res.sendFile(path.join(__dirname, "../vite-project/dist/index.html"));
 });
 
