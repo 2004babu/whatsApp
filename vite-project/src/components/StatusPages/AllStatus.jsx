@@ -97,7 +97,7 @@ const AllStatus = () => {
           let Added=false;
           for(let i=0 ;i <sortedArray?.length;i++){
             if (new Date(currentArray?.status[currentArray?.status?.length-1]?.createAt)>new Date(sortedArray[i]?.status[currentArray?.status?.length-1]?.createAt)) {
-              console.log('enter');
+              // console.log('enter');
               sortedArray.splice(i,0,currentArray)
               Added=true;
               break

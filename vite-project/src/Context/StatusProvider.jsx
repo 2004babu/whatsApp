@@ -7,11 +7,10 @@ export const useStatusUserList = () => {
 };
 
 export const StatusProvider = ({ children }) => {
-  let logo = 'erreeeeeeeee';
   const [statusUser, setStatusUser] = useState([]);
 // console.log(statusUser);
   return (
-    <StatusContext.Provider value={{ logo, statusUser, setStatusUser }}>
+    <StatusContext.Provider value={{  statusUser, setStatusUser }}>
       {children}
     </StatusContext.Provider>
   );
@@ -30,7 +29,6 @@ export const StatusProvider = ({ children }) => {
 // export const StatusProvider = ({ children }) => {
 //   const [statusUser, setStatusUser] = useState([]);
 
-// let logo='erreeeeeeeee'
 
 //   return (
 //     <contextProvider.Provider value={{logo, statusUser, setStatusUser }}>

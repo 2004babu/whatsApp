@@ -67,10 +67,13 @@ const ViewStatus = () => {
       if (currentStatusUser?.status?.length === countF.length) {
         setCount(0);
       } else {
-        setCount(countF.length > 0 ? countF.length - 1 :  0);
+        setCount(countF.length > 0 ? countF.length - 1 : 0);
       }
-      // console.log(countF.length);
+      console.log(countF.length);
     }
+
+    console.log('gggggggggg');
+    
   }, [users, currentStatusUser]);
 
   useEffect(() => {
@@ -78,7 +81,6 @@ const ViewStatus = () => {
     if (currentStatusUser && users?.length > 0) {
       let filtered;
       filtered = users?.filter((item) =>
-
         user?.status[count ?? 0]?.viewCount.includes(item._id.toString())
       );
       // console.log(filtered);
@@ -87,7 +89,7 @@ const ViewStatus = () => {
   }, [count, users]);
   // console.log('statusUserIndex',statusUserIndex);
   // console.log(count);
-
+  
   const handlePlayPuase = () => {
     if (showDiv) {
       setStartY(null);
@@ -99,33 +101,47 @@ const ViewStatus = () => {
       return;
     }
     // currentStatusUser?.status?.length - count < currentStatusUser?.status?.length
-    
-    // console.log(statusUserIndex);
-    if ( currentStatusUser?.status?.length > 1) {
-      // console.log("entered");
+
+    console.log(currentStatusUser);
+    if (currentStatusUser?.status?.length > 1) {
+      console.log("entered");
       if ((videoRef.current?.clientWidth * 50) / 100 <= videoendY) {
         console.log("right");
-        // console.log(count);
+        console.log(count);
         // console.log(count < currentStatusUser?.status?.length - 1);
         if (count < currentStatusUser?.status?.length - 1) {
           setCount(count + 1);
 
-          if (!statusUser[statusUserIndex]?.status[count]?.viewCount.includes(user?._id)) {
+          if (
+            !statusUser[statusUserIndex]?.status[count]?.viewCount.includes(
+              user?._id
+            )
+          ) {
             console.log("send");
             handleSubmitViewCount(currentStatus?._id);
           }
-        } else if (!isMyStstus&& statusUserIndex < statusUser?.length - 1) {
+        } else if (!isMyStstus && statusUserIndex < statusUser?.length - 1) {
+          if (location?.state?.from === "/") {
+            return navigate('/')
+          }
           setStatusUSerIndex(statusUserIndex + 1);
-          console.log(
-            "statusUserIndex",
-            statusUserIndex,
-            statusUser[statusUserIndex]
-          );
+
+          // console.log(
+          //   "statusUserIndex",
+          //   statusUserIndex,
+          //   statusUser[statusUserIndex]
+          // );
         } else {
           console.log("redirect allstatus");
-          navigate("/allstatus");
+          if (location?.state?.from === "/") {
+            navigate("/");
+          } else if (location?.state?.from === "/allstatus") {
+            navigate("/allstatus");
+          }
         }
       } else {
+
+        
         if (count >= 1) {
           console.log("left");
 
@@ -136,18 +152,52 @@ const ViewStatus = () => {
             handleSubmitViewCount(currentStatus?._id);
           }
         } else if (statusUserIndex !== 0) {
+          if (location?.state?.from === "/") {
+            return navigate('/')
+          }
           setStatusUSerIndex(statusUserIndex - 1);
         }
       }
       return;
     } else if (user?._id !== id) {
+      if ((videoRef.current?.clientWidth * 50) / 100 <= videoendY) {
+        console.log("index right");
+        if (statusUserIndex < statusUser?.length - 1) {
+          if (location?.state?.from === "/") {
+            return navigate('/')
+          }
+          setStatusUSerIndex(statusUserIndex + 1);
+        } else {
+          console.log("redirect allstatus");
+          // navigate("/allstatus");
+        }
+      } else {
+        console.log("index left");
+
+        if (statusUserIndex !== 0) {
+          if (location?.state?.from === "/") {
+            return navigate('/')
+          }
+          setStatusUSerIndex(statusUserIndex - 1);
+          return;
+        }
+      }
       console.log("finish");
-      if (!statusUser[statusUserIndex]?.status[count]?.viewCount.includes(user?._id)) {
+      if (
+        !statusUser[statusUserIndex]?.status[count]?.viewCount.includes(
+          user?._id
+        )
+      ) {
         console.log("send");
         handleSubmitViewCount(currentStatus?._id);
       }
-      setStatusUSerIndex(statusUserIndex + 1);
-      return;
+      if (statusUserIndex < statusUser?.length - 1) {
+        if (location?.state?.from === "/") {
+          return navigate('/')
+        }
+        setStatusUSerIndex(statusUserIndex + 1);
+        return;
+      }
     }
 
     // dispatch(getUsers);
@@ -157,24 +207,46 @@ const ViewStatus = () => {
       navigate("/allstatus");
     }
   };
-  // console.log(statusUser[statusUserIndex]);
+  // console.log(videoRef);
 
   useEffect(() => {
     // console.log(statusUserIndex);
     setCurrentStatusUser(statusUser[statusUserIndex]);
   }, [statusUserIndex]);
+
+  useEffect(() => {
+    // console.log('set current Status ');
+    setCurrentStatus(currentStatusUser?.status[count]);
+  }, [count, currentStatusUser, user, users,statusUserIndex]);
+
   // console.log(statusUserIndex,currentStatusUser);
   useEffect(() => {
+    // videoRef.addEventListener('')
+
     const handleVideoEnd = () => {
       console.log("Video ended");
-      console.log(currentStatusUser?.status?.length - 1);
+      // console.log(statusUser[statusUserIndex].status);
+      console.log(count,'count');
+      if (isMyStstus) {
+        navigate("/allstatus");
+        return
+      }
+      console.log(count < currentStatusUser?.status?.length - 1);
+      console.log(count , currentStatusUser?.status?.length - 1);
       if (count < currentStatusUser?.status?.length - 1) {
         setCount(count + 1);
-        if (!currentStatus?.viewCount.includes(user?._id)) {
-          console.log("send");
-          handleSubmitViewCount(currentStatus?._id);
-        }
         return;
+      } else {
+        console.log(statusUserIndex < statusUser?.length - 1);
+        
+        if (statusUserIndex < statusUser?.length - 1) {
+          if (location?.state?.from === "/") {
+            return navigate('/')
+          }
+          setCount(0)
+          setStatusUSerIndex(statusUserIndex + 1);
+          return;
+        }
       }
       console.log("Video ended back to ");
 
@@ -188,6 +260,7 @@ const ViewStatus = () => {
     };
     // console.log('hhhhhh');
     const videoElement = videoRef.current;
+
     if (videoElement) {
       console.log("jiii");
       videoElement.addEventListener("ended", handleVideoEnd);
@@ -196,11 +269,11 @@ const ViewStatus = () => {
     // Cleanup the event listener on unmount
     return () => {
       if (videoElement) {
-        console.log("enn");
+        console.log("ended");
         videoElement.removeEventListener("ended", handleVideoEnd);
       }
     };
-  }, [navigate, videoRef]);
+  }, [navigate, count, isMyStstus, currentStatusUser, statusUser, statusUserIndex, setCount, setStatusUSerIndex, location]);
 
   // console.log(users);
   const handleMessage = (e) => {
@@ -248,21 +321,22 @@ const ViewStatus = () => {
 
     console.log(currentStatusUser);
     if (currentStatusUser?._id && id) {
-
       // if (user?._id===id) {
       //   console.log('same');
       //   return
       // }
-      console.log('dispatch VIew ');
+      console.log("dispatch VIew ");
       dispatch(
         viewCounter({ statusOwner: currentStatusUser?._id, statusId: id })
       );
     }
   };
-  // console.log(count);
-  useEffect(() => {
-    setCurrentStatus(currentStatusUser?.status[count]);
-  }, [count, currentStatusUser, user, users]);
+  // console.log(statusUser);
+ 
+  // console.log(currentStatusUser?.status[count]?.Status);
+  // console.log(count,"count");
+  
+  
   useEffect(() => {
     dispatch(getUsers);
 
@@ -281,6 +355,11 @@ const ViewStatus = () => {
 
   const handlebackward = () => {
     console.log("backe=wrd");
+    if (location?.state?.from === "/") {
+      navigate("/");
+    } else if (location?.state?.from === "/allstatus") {
+      navigate("/allstatus");
+    }
   };
   return (
     <Fragment>
@@ -288,8 +367,9 @@ const ViewStatus = () => {
       currentStatusUser.status &&
       currentStatusUser.status.length > 0 ? (
         <Fragment>
-          <div className="position-absolute w-100 p-2 poiter  d-flex gap-5 mt-4 justify-content-start align-items-center ">
+          <div  style={{zIndex:"10"}} className="position-absolute w-100 p-2 poiter  d-flex gap-5 mt-4 justify-content-start align-items-center ">
             <i
+           
               onClick={handlebackward}
               className=" text-white fa-solid fa-arrow-left fs-1 "
             ></i>
@@ -314,9 +394,9 @@ const ViewStatus = () => {
 
           <video
             src={currentStatusUser?.status[count]?.Status}
-            className=" w-100 video "
-            height={"101%"}
-            playsInline
+            className="  video "
+            
+            // playsInline
             autoPlay
             ref={videoRef}
             onClick={handlePlayPuase}
@@ -341,12 +421,16 @@ const ViewStatus = () => {
                   style={{ height: `${endY ? endY : "50"}px` }}
                 >
                   <i className=" text-white fw-bold fa-regular fa-eye d-flex w-100 p-2 justify-content-center align-items-center ">
-                    {currentStatusUser?.status[count]?.viewCount?.length ?? null}
+                    {currentStatusUser?.status[count]?.viewCount?.length ??
+                      null}
                   </i>
 
                   {showDiv &&
                     statusViewUSer?.map((item) => (
-                      <div key={item?._id} className="p-3 m-0  w-100 d-flex justify-content-between align-items-center">
+                      <div
+                        key={item?._id}
+                        className="p-3 m-0  w-100 d-flex justify-content-between align-items-center"
+                      >
                         <figure className="figure d-flex justify-content-center align-items-center gap-2">
                           <img
                             className="img myStatus"
@@ -354,7 +438,6 @@ const ViewStatus = () => {
                             height={"60px "}
                             width={"60px"}
                             alt="pp"
-                            
                           />
                           <h4 className="text-white">{item.name}</h4>
                         </figure>

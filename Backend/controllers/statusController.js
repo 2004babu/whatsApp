@@ -55,13 +55,8 @@ exports.viewCount = catchAsyncError(async (req, res, next) => {
   }
 
   let filtered;
-
- 
-
-
- user.status= user.status.map(item=>{
-  
-   if (item._id===statusId && !item.viewCount.includes(viewUser)){
+ user.status= user.status.map(item=>{  
+   if (item._id.toString()===statusId && !item.viewCount.includes(viewUser)){
      
     item.viewCount.push(viewUser)
    

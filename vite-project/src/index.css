@@ -65,6 +65,10 @@ bottom: 0px;
 
   }
   .video{
+    height: 100%;
+    width: 100%;
+    position: inherit;
+    
     object-fit: cover;
    
 
