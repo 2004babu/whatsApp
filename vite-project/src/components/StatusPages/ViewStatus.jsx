@@ -227,10 +227,7 @@ const ViewStatus = () => {
       console.log("Video ended");
       // console.log(statusUser[statusUserIndex].status);
       console.log(count,'count');
-      if (isMyStstus) {
-        navigate("/allstatus");
-        return
-      }
+      
       console.log(count < currentStatusUser?.status?.length - 1);
       console.log(count , currentStatusUser?.status?.length - 1);
       if (count < currentStatusUser?.status?.length - 1) {
@@ -240,11 +237,17 @@ const ViewStatus = () => {
         console.log(statusUserIndex < statusUser?.length - 1);
         
         if (statusUserIndex < statusUser?.length - 1) {
-          if (location?.state?.from === "/") {
-            return navigate('/')
+          if (location?.state?.from === "/"||isMyStstus) {
+            if (location?.state?.from === "/") {
+              navigate("/");
+            } else if (location?.state?.from === "/allstatus") {
+              navigate("/allstatus");
+            }
           }
           setCount(0)
           setStatusUSerIndex(statusUserIndex + 1);
+          console.log('status');
+          
           return;
         }
       }
