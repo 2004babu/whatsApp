@@ -19,7 +19,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon Backend/server.js",
-    "dev": "nodemon Backend/server.js"
+    "prod":" set NODE_ENV=Production&&nodemon Backend/server.js",
+    "dev": " set NODE_ENV=Devlopment&&nodemon Backend/server.js"
    
   },
   "keywords": [],

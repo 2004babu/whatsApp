@@ -10,7 +10,7 @@ exports.setStatus = catchAsyncError(async (req, res, next) => {
 
   let BASE_URL = `${process.env.BACKEND_URL}`;
 
-  if (process.env.NODE_ENV === "Prodection") {
+  if (process.env.NODE_ENV === "Production") {
     BASE_URL = `${req.protocol}://${req.get("host")}`;
   }
   if (!req.file) {
