@@ -42,7 +42,7 @@ const decodedFileName = decodeURIComponent(path.basename(parsedUrl.pathname));
 
       cb(null, decodedFileName);
     }else{
-      cd (null ,file.originalname)
+      cb (null ,file.originalname)
     }
     },
   });
